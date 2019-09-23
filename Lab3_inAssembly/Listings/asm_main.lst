@@ -1,0 +1,253 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ; Port 1 Pin Direction Register
+    2 00000000 40004C04 
+                       P1DIR   EQU              0x40004C04
+    3 00000000         ; Port 1 Pin Output Register
+    4 00000000 40004C02 
+                       P1OUT   EQU              0x40004C02
+    5 00000000         
+    6 00000000 40004C05 
+                       P2DIR   EQU              0x40004C05
+    7 00000000 40004C03 
+                       P2OUT   EQU              0x40004C03
+    8 00000000         
+    9 00000000 40004C24 
+                       P3DIR   EQU              0x40004C24
+   10 00000000 40004C22 
+                       P3OUT   EQU              0x40004C22
+   11 00000000         
+   12 00000000                 THUMB
+   13 00000000                 AREA             |.text|, CODE, READONLY, ALIGN=
+2
+   14 00000000                 EXPORT           asm_main
+   15 00000000         
+   16 00000000         asm_main
+   17 00000000         ; make P1.0 an output pin
+   18 00000000 481C            LDR              R0, =P2DIR  ; load Dir Reg in R
+                                                            1
+   19 00000002 7801            LDRB             R1, [R0]
+   20 00000004 F041 0107       ORR              R1, #7      ; set bit 0
+   21 00000008 7001            STRB             R1, [R0]    ; store back to Dir
+                                                             Reg
+   22 0000000A         
+   23 0000000A         loop
+   24 0000000A         ; turn off all LED
+   25 0000000A 481B            LDR              R0, =P2OUT  ; load Output Data 
+                                                            Reg in R1
+   26 0000000C 7801            LDRB             R1, [R0]
+   27 0000000E F06F 0207       MVN              R2, #7      ; load complement o
+                                                            f bit 0 mask
+   28 00000012 EA01 0102       AND              R1, R2      ; clear bit 0
+   29 00000016 7001            STRB             R1, [R0]    ; store back to Out
+                                                            put Data Reg
+   30 00000018         
+   31 00000018         ; delay for 0.5 second
+   32 00000018 4818            LDR              R0, =500000
+   33 0000001A F000 F827       BL               delayMs
+   34 0000001E         
+   35 0000001E         ; turn on red LED
+   36 0000001E 4816            LDR              R0, =P2OUT  ; load Output Data 
+                                                            Reg in R1
+   37 00000020 7801            LDRB             R1, [R0]
+   38 00000022 F041 0101       ORR              R1, #1      ; set bit 0
+   39 00000026 7001            STRB             R1, [R0]    ; store back to Out
+                                                            put Data Reg
+   40 00000028         
+   41 00000028         ; delay for 0.5 second
+   42 00000028 4814            LDR              R0, =500000
+   43 0000002A F000 F81F       BL               delayMs
+   44 0000002E         
+   45 0000002E         ; turn off all LED
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   46 0000002E 4812            LDR              R0, =P2OUT  ; load Output Data 
+                                                            Reg in R1
+   47 00000030 7801            LDRB             R1, [R0]
+   48 00000032 F06F 0207       MVN              R2, #7      ; load complement o
+                                                            f bit 0 mask
+   49 00000036 EA01 0102       AND              R1, R2      ; clear bit 0
+   50 0000003A 7001            STRB             R1, [R0]    ; store back to Out
+                                                            put Data Reg
+   51 0000003C         
+   52 0000003C         ; turn on green LED
+   53 0000003C 480E            LDR              R0, =P2OUT  ; load Output Data 
+                                                            Reg in R1
+   54 0000003E 7801            LDRB             R1, [R0]
+   55 00000040 F041 0102       ORR              R1, #2      ; set bit 0
+   56 00000044 7001            STRB             R1, [R0]    ; store back to Out
+                                                            put Data Reg
+   57 00000046         
+   58 00000046         ; delay for 0.5 second
+   59 00000046 480D            LDR              R0, =500000
+   60 00000048 F000 F810       BL               delayMs
+   61 0000004C         
+   62 0000004C         ; turn off all LED
+   63 0000004C 480A            LDR              R0, =P2OUT  ; load Output Data 
+                                                            Reg in R1
+   64 0000004E 7801            LDRB             R1, [R0]
+   65 00000050 F06F 0207       MVN              R2, #7      ; load complement o
+                                                            f bit 0 mask
+   66 00000054 EA01 0102       AND              R1, R2      ; clear bit 0
+   67 00000058 7001            STRB             R1, [R0]    ; store back to Out
+                                                            put Data Reg
+   68 0000005A         
+   69 0000005A         ; turn on blue LED
+   70 0000005A 4807            LDR              R0, =P2OUT  ; load Output Data 
+                                                            Reg in R1
+   71 0000005C 7801            LDRB             R1, [R0]
+   72 0000005E F041 0104       ORR              R1, #4      ; set bit 0
+   73 00000062 7001            STRB             R1, [R0]    ; store back to Out
+                                                            put Data Reg
+   74 00000064         
+   75 00000064         ; delay for 0.5 second
+   76 00000064 4805            LDR              R0, =500000
+   77 00000066 F000 F801       BL               delayMs
+   78 0000006A         
+   79 0000006A E7CE            B                loop        ; repeat the loop
+   80 0000006C         
+   81 0000006C         ; This subroutine performs a delay of n ms (for 3 MHz CP
+                       U clock). 
+   82 0000006C         ; n is the value in R0.
+   83 0000006C         delayMs
+   84 0000006C         
+   85 0000006C 3801    L1      SUBS             R0, #1      ; inner loop
+   86 0000006E D1FD            BNE              L1
+   87 00000070 4770            BX               LR
+   88 00000072         
+   89 00000072                 END
+              00 00 40004C05 
+              40004C03 
+              0007A120 
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp --apcs=int
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+erwork --depend=.\objects\asm_main.d -o.\objects\asm_main.o -I.\RTE\_Target_1 -
+IC:\Users\fssoh\AppData\Local\Arm\Packs\ARM\CMSIS\5.6.0\CMSIS\Core\Include -IC:
+\Users\fssoh\AppData\Local\Arm\Packs\TexasInstruments\MSP432P4xx_DFP\3.2.6\Devi
+ce\Include --predefine="__EVAL SETA 1" --predefine="__UVISION_VERSION SETA 528"
+ --predefine="_RTE_ SETA 1" --predefine="__MSP432P401R__ SETA 1" --list=.\listi
+ngs\asm_main.lst asm_main.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+.text 00000000
+
+Symbol: .text
+   Definitions
+      At line 13 in file asm_main.s
+   Uses
+      None
+Comment: .text unused
+L1 0000006C
+
+Symbol: L1
+   Definitions
+      At line 85 in file asm_main.s
+   Uses
+      At line 86 in file asm_main.s
+Comment: L1 used once
+asm_main 00000000
+
+Symbol: asm_main
+   Definitions
+      At line 16 in file asm_main.s
+   Uses
+      At line 14 in file asm_main.s
+Comment: asm_main used once
+delayMs 0000006C
+
+Symbol: delayMs
+   Definitions
+      At line 83 in file asm_main.s
+   Uses
+      At line 33 in file asm_main.s
+      At line 43 in file asm_main.s
+      At line 60 in file asm_main.s
+      At line 77 in file asm_main.s
+
+loop 0000000A
+
+Symbol: loop
+   Definitions
+      At line 23 in file asm_main.s
+   Uses
+      At line 79 in file asm_main.s
+Comment: loop used once
+5 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+P1DIR 40004C04
+
+Symbol: P1DIR
+   Definitions
+      At line 2 in file asm_main.s
+   Uses
+      None
+Comment: P1DIR unused
+P1OUT 40004C02
+
+Symbol: P1OUT
+   Definitions
+      At line 4 in file asm_main.s
+   Uses
+      None
+Comment: P1OUT unused
+P2DIR 40004C05
+
+Symbol: P2DIR
+   Definitions
+      At line 6 in file asm_main.s
+   Uses
+      At line 18 in file asm_main.s
+Comment: P2DIR used once
+P2OUT 40004C03
+
+Symbol: P2OUT
+   Definitions
+      At line 7 in file asm_main.s
+   Uses
+      At line 25 in file asm_main.s
+      At line 36 in file asm_main.s
+      At line 46 in file asm_main.s
+      At line 53 in file asm_main.s
+      At line 63 in file asm_main.s
+      At line 70 in file asm_main.s
+
+P3DIR 40004C24
+
+Symbol: P3DIR
+   Definitions
+      At line 9 in file asm_main.s
+   Uses
+      None
+Comment: P3DIR unused
+P3OUT 40004C22
+
+Symbol: P3OUT
+   Definitions
+      At line 10 in file asm_main.s
+   Uses
+      None
+Comment: P3OUT unused
+6 symbols
+348 symbols in table

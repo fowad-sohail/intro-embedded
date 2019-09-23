@@ -1,0 +1,191 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ; ******** NUMBER 1 ********
+    2 00000000         ;  AREA program, CODE, READONLY
+    3 00000000         ;  EXPORT main
+    4 00000000         ;  ENTRY
+    5 00000000         ;main
+    6 00000000         
+    7 00000000         ;  LDR r0,= label
+    8 00000000         ;  LDR r1,[r0]
+    9 00000000         ;  B main
+   10 00000000         
+   11 00000000         ;  AREA mydata, DATA, READWRITE
+   12 00000000         ;label  DCB 0xA1
+   13 00000000         ;  END
+   14 00000000         
+   15 00000000         
+   16 00000000         ;******** NUMBER 2 ********
+   17 00000000         ;  AREA program, CODE, READONLY
+   18 00000000         ;  EXPORT main
+   19 00000000         ;  ENTRY
+   20 00000000         ;main
+   21 00000000         
+   22 00000000         ;  LDR r0,= label
+   23 00000000         ;  LDR r1,[r0]
+   24 00000000         ;  B main
+   25 00000000         
+   26 00000000         ;  AREA mydata, DATA, READWRITE
+   27 00000000         ;label  DCB 0xA1, 0xAB
+   28 00000000         ;  END
+   29 00000000         
+   30 00000000         ;******** NUMBER 3 ********
+   31 00000000         ;  AREA program, CODE, READONLY
+   32 00000000         ;  EXPORT main
+   33 00000000         ;  ENTRY
+   34 00000000         ;main
+   35 00000000         
+   36 00000000         ;  LDR r0,= label
+   37 00000000         ;  LDR r1,[r0]
+   38 00000000         ;  B main
+   39 00000000         ; 
+   40 00000000         ;  AREA mydata, DATA, READWRITE
+   41 00000000         ;label  DCB 0xA1, 0xAB, 0xC2, 0xD3
+   42 00000000         ;  END
+   43 00000000         
+   44 00000000         ;******** NUMBER 4 ********
+   45 00000000         ;  AREA program, CODE, READONLY
+   46 00000000         ;  EXPORT main
+   47 00000000         ;  ENTRY
+   48 00000000         ;main
+   49 00000000         
+   50 00000000         ;  LDR r0,= label1
+   51 00000000         ;  LDR r1,[r0]
+   52 00000000         ;  B main
+   53 00000000         
+   54 00000000         ;  AREA mydata, DATA, READWRITE
+   55 00000000         ;label1  DCB 0xA1
+   56 00000000         ;label2  DCB 0xF3
+   57 00000000         ;  END
+   58 00000000         
+   59 00000000         ;******** NUMBER 5 ********
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   60 00000000         ;  AREA program, CODE, READONLY
+   61 00000000         ;  EXPORT main
+   62 00000000         ;  ENTRY
+   63 00000000         ;main
+   64 00000000         
+   65 00000000         ;  LDR r0,= label1
+   66 00000000         ;  LDR r1,[r0]
+   67 00000000         ;  B main
+   68 00000000         ;  
+   69 00000000         ;  AREA mydata, DATA, READWRITE
+   70 00000000         ;label1  DCB 0xA1
+   71 00000000         ;label2  DCW 0xBCDF
+   72 00000000         ;  END
+   73 00000000         
+   74 00000000         ;******** NUMBER 7 ********
+   75 00000000         ;  AREA program, CODE, READONLY
+   76 00000000         ;  EXPORT main
+   77 00000000         ;  ENTRY
+   78 00000000         ;main
+   79 00000000         
+   80 00000000         ;  LDR r0,= label
+   81 00000000         ;  LDR r1,[r0]
+   82 00000000         ;  ADD r0, r0, 4
+   83 00000000         ;  LDR r2,[r0]
+   84 00000000         ;  B main
+   85 00000000         ;  
+   86 00000000         ;  AREA mydata, DATA, READWRITE
+   87 00000000         ;label  DCD 0xA1F1C3B2, 0xAAFFCCBB
+   88 00000000         ;  END
+   89 00000000         
+   90 00000000         ;******** NUMBER 8 ********
+   91 00000000         ;  AREA program, CODE, READONLY
+   92 00000000         ;  EXPORT main
+   93 00000000         ;  ENTRY
+   94 00000000         ;main
+   95 00000000         
+   96 00000000         ;  LDR r0,= label
+   97 00000000         ;  LDR r1,[r0]
+   98 00000000         ;  LDR r2,[r0,4]
+   99 00000000         ;  B main
+  100 00000000         
+  101 00000000         ;  AREA mydata, DATA, READWRITE
+  102 00000000         ;label  DCD 0xA1F1C3B2, 0xAAFFCCBB
+  103 00000000         ;  END 
+  104 00000000         
+  105 00000000         ;******** NUMBER 9 ********
+  106 00000000                 AREA             program, CODE, READONLY
+  107 00000000                 EXPORT           main
+  108 00000000                 ENTRY
+  109 00000000         main
+  110 00000000         
+  111 00000000 F9B0 1000       LDRSH            r1,[r0]
+  112 00000004 F9B0 2004       LDRSH            r2,[r0,4]
+  113 00000008 6842            LDR              r2,[r0,4]
+  114 0000000A E7FE            B                main
+  115 0000000C         
+  116 0000000C                 AREA             mydata, DATA, READWRITE
+  117 00000000 A1F1C3B2 
+              AAFFCCBB label   DCD              0xA1F1C3B2, 0xAAFFCCBB
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+  118 00000008                 END
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
+ork --depend=.\objects\main.d -o.\objects\main.o -I.\RTE\_Target_1 -IC:\Users\f
+ssoh\AppData\Local\Arm\Packs\ARM\CMSIS\5.6.0\CMSIS\Core\Include -IC:\Users\fsso
+h\AppData\Local\Arm\Packs\ARM\CMSIS\5.6.0\Device\ARM\ARMCM3\Include --predefine
+="__EVAL SETA 1" --predefine="__UVISION_VERSION SETA 528" --predefine="_RTE_ SE
+TA 1" --predefine="ARMCM3 SETA 1" --list=.\listings\main.lst main.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+main 00000000
+
+Symbol: main
+   Definitions
+      At line 109 in file main.s
+   Uses
+      At line 107 in file main.s
+      At line 114 in file main.s
+
+program 00000000
+
+Symbol: program
+   Definitions
+      At line 106 in file main.s
+   Uses
+      None
+Comment: program unused
+2 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+label 00000000
+
+Symbol: label
+   Definitions
+      At line 117 in file main.s
+   Uses
+      None
+Comment: label unused
+mydata 00000000
+
+Symbol: mydata
+   Definitions
+      At line 116 in file main.s
+   Uses
+      None
+Comment: mydata unused
+2 symbols
+338 symbols in table
