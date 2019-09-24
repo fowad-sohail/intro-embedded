@@ -45,10 +45,7 @@ stateB
 	LDR		R0, =500000
     BL      delayMs
 	BL allOFF
-	LDR		R0, =500000
-    BL      delayMs
-	BL yellowON
-	;BL redOFF
+	BL redON
 	BX      LR
 
 ; SUBROUTINES
@@ -83,6 +80,12 @@ yellowOFF
         STRB    R1, [R0]        ; store back to Output Data Reg
 		BX      LR
 
+redON
+		LDR     R0, =P1OUT      ; load Output Data Reg in R1
+        LDRB    R1, [R0]
+        ORR     R1, #1          ; set bit 0
+        STRB    R1, [R0]        ; store back to Output Data Reg
+		
 allOFF
 		LDR     R0, =P2OUT      ; load Output Data Reg in R1
         LDRB    R1, [R0]
