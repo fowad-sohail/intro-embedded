@@ -5,7 +5,12 @@ P1OUT EQU 0x40004C02
 	
 P2DIR EQU 0x40004C05
 P2OUT EQU 0x40004C03
+
+FLAmask EQU 0x40 ; bitmask P2.6
+TSTmask EQU 0x2 ; bitmask P1.1
+YELLOWmask EQU 0x10 ; bitmask P2.4
 	
+
         THUMB
         AREA    |.text|, CODE, READONLY, ALIGN=2
         EXPORT  asm_main
@@ -18,60 +23,12 @@ asm_main
         STRB    R1, [R0]        ; store back to Dir Reg
 
 loop
-        ; turn off all LED
-        LDR     R0, =P2OUT      ; load Output Data Reg in R1
-        LDRB    R1, [R0]
-        MVN     R2, #7          ; load complement of bit 0 mask
-        AND     R1, R2          ; clear bit 0
-        STRB    R1, [R0]        ; store back to Output Data Reg
+        BL 		allOFF
 
-        ; delay for 0.5 second
-        LDR     R0, =500000
-        BL      delayMs
+        ; STATE B
+		BL		stateB
+        
 
-        ; turn on red LED
-        LDR     R0, =P2OUT      ; load Output Data Reg in R1
-        LDRB    R1, [R0]
-        ORR     R1, #1          ; set bit 0
-        STRB    R1, [R0]        ; store back to Output Data Reg
-
-        ; delay for 0.5 second
-        LDR     R0, =500000
-        BL      delayMs
-		
-		; turn off all LED
-        LDR     R0, =P2OUT      ; load Output Data Reg in R1
-        LDRB    R1, [R0]
-        MVN     R2, #7          ; load complement of bit 0 mask
-        AND     R1, R2          ; clear bit 0
-        STRB    R1, [R0]        ; store back to Output Data Reg
-		
-		; turn on green LED
-        LDR     R0, =P2OUT      ; load Output Data Reg in R1
-        LDRB    R1, [R0]
-        ORR     R1, #2          ; set bit 0
-        STRB    R1, [R0]        ; store back to Output Data Reg
-
-		; delay for 0.5 second
-        LDR     R0, =500000
-        BL      delayMs
-		
-		; turn off all LED
-        LDR     R0, =P2OUT      ; load Output Data Reg in R1
-        LDRB    R1, [R0]
-        MVN     R2, #7          ; load complement of bit 0 mask
-        AND     R1, R2          ; clear bit 0
-        STRB    R1, [R0]        ; store back to Output Data Reg
-		
-		; turn on blue LED
-        LDR     R0, =P2OUT      ; load Output Data Reg in R1
-        LDRB    R1, [R0]
-        ORR     R1, #4          ; set bit 0
-        STRB    R1, [R0]        ; store back to Output Data Reg
-		
-		; delay for 0.5 second
-        LDR     R0, =500000
-        BL      delayMs
 
         B       loop	; repeat the loop
 
@@ -83,4 +40,56 @@ L1      SUBS    R0, #1          ; inner loop
         BNE     L1
         BX      LR
 
+stateB
+	BL 	greenON
+	LDR		R0, =500000
+    BL      delayMs
+	BL allOFF
+	LDR		R0, =500000
+    BL      delayMs
+	BL yellowON
+	;BL redOFF
+	BX      LR
+
+; SUBROUTINES
+greenON
+		LDR     R0, =P2OUT      ; load Output Data Reg in R1
+        LDRB    R1, [R0]
+        ORR     R1, #2          ; set bit 0
+        STRB    R1, [R0]        ; store back to Output Data Reg
+		BX      LR
+
+greenOFF
+		LDR     R0, =P2OUT      ; load Output Data Reg in R1
+        LDRB    R1, [R0]
+        MVN     R2, #2          ; load complement of bit 0 mask
+        AND     R1, R2          ; clear bit 0
+        STRB    R1, [R0]        ; store back to Output Data Reg
+		BX      LR
+
+; CHECK THESE WHEN TRANSFER TO YOUR ON BOARD ***************************************************8888
+yellowON
+		LDR     R0, =P2OUT      ; load Output Data Reg in R1
+        LDRB    R1, [R0]
+        ORR     R1, YELLOWmask         
+        STRB    R1, [R0]        ; store back to Output Data Reg
+		BX      LR
+
+yellowOFF
+		LDR     R0, =P2OUT      ; load Output Data Reg in R1
+        LDRB    R1, [R0]
+        MVN     R2, #2          ; load complement of bit 0 mask
+        AND     R1, R2          ; clear bit 0
+        STRB    R1, [R0]        ; store back to Output Data Reg
+		BX      LR
+
+allOFF
+		LDR     R0, =P2OUT      ; load Output Data Reg in R1
+        LDRB    R1, [R0]
+        MVN     R2, #7          ; load complement of bit 0 mask
+        AND     R1, R2          ; clear bit 0
+        STRB    R1, [R0]        ; store back to Output Data Reg
+		BX      LR
+		
         END
+			
