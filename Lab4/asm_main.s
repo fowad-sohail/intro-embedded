@@ -59,6 +59,9 @@ stateB
 	LDR		R0, =500000
     BL      delayMs
 	BL redON
+	LDR		R0, =500000
+    BL      delayMs
+	BL redOFF
 	BX      LR
 
 ; SUBROUTINES
@@ -99,9 +102,9 @@ redON
         STRB    R1, [R0]        ; store back to Output Data Reg
 
 redOFF
-		LDR     R0, =P2OUT      ; load Output Data Reg in R1
+		LDR     R0, =P1OUT      ; load Output Data Reg in R1
         LDRB    R1, [R0]
-        MVN     R2, #0          ; load complement of bit 0 mask
+        MVN     R2, #1          ; load complement of bit 0 mask
         AND     R1, R2          ; clear bit 0
         STRB    R1, [R0]        ; store back to Output Data Reg
 		BX      LR
