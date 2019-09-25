@@ -42,7 +42,16 @@ loop
 ;-------------------------------------------------------------------------------
 ; STATES
 stateA
-	BL greenOFF ; THIS ISNT RIGHT FOR STATE A
+	BL greenON
+	BL yellowON
+	BL redON
+	
+	LDR     R0, =500000
+        BL      delayMs
+	
+	BL yellowOFF
+	BL redOFF
+	
 	B stateA
 
 
