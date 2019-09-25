@@ -6,6 +6,7 @@ P1IN EQU 0x40004C00
 	
 P2DIR EQU 0x40004C05
 P2OUT EQU 0x40004C03
+P2IN EQU 0x40004C01
 
 FLAmask EQU 0x40 ; bitmask P2.6
 TSTmask EQU 0x2 ; bitmask P1.1
@@ -38,18 +39,23 @@ loop
 
         B       loop	; repeat the loop
 
-; This subroutine performs a delay of n ms (for 3 MHz CPU clock). 
-; n is the value in R0.
+;-------------------------------------------------------------------------------
+; STATES
+stateA
+	BL greenOFF ; THIS ISNT RIGHT FOR STATE A
+	B stateA
+
+
 stateB
 	BL greenON
 	BL yellowOFF
 	BL redOFF
 	
 	; to get to stateC
-;	LDR r0, =P2IN
-;	LDRB r1, [r0]
-;	TST r1, FLAmask
-;	BEQ stateC
+	LDR r0, =P2IN
+	LDRB r1, [r0]
+	TST r1, FLAmask
+	BEQ stateC
 
 	; to get to stateA
 	LDR r0, =P1IN
@@ -59,11 +65,11 @@ stateB
 	
 	B stateB
 
+stateC
+	BL redON ; THIS ISNT RIGHT FOR STATE C
+	B stateC
 
-stateA
-	BL greenOFF
-	B stateA
-
+; ------------------------------------------------------------------------------
 ; SUBROUTINES
 delayMs
        
