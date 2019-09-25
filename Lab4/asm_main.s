@@ -48,6 +48,9 @@ stateB
 	LDR		R0, =500000
     BL      delayMs
 	BL yellowON
+	LDR		R0, =500000
+    BL      delayMs
+	BL yellowOFF
 	BX      LR
 
 ; SUBROUTINES
@@ -77,7 +80,7 @@ yellowON
 yellowOFF
 		LDR     R0, =P2OUT      ; load Output Data Reg in R1
         LDRB    R1, [R0]
-        MVN     R2, #2          ; load complement of bit 0 mask
+        MVN     R2, YELLOWmask          ; load complement of bit 0 mask
         AND     R1, R2          ; clear bit 0
         STRB    R1, [R0]        ; store back to Output Data Reg
 		BX      LR
