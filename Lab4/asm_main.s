@@ -19,7 +19,7 @@ asm_main
         ; make P1.0 an output pin
         LDR     R0, =P2DIR      ; load Dir Reg in R1
         LDRB    R1, [R0]
-        ORR     R1, #7          ; set bit 0
+        ORR     R1, #23          ; set bit 0
         STRB    R1, [R0]        ; store back to Dir Reg
 
 loop
@@ -44,8 +44,10 @@ stateB
 	BL 	greenON
 	LDR		R0, =500000
     BL      delayMs
-	BL allOFF
-	BL redON
+	BL greenOFF
+	LDR		R0, =500000
+    BL      delayMs
+	BL yellowON
 	BX      LR
 
 ; SUBROUTINES
