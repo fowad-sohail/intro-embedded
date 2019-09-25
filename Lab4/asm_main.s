@@ -21,6 +21,11 @@ asm_main
         LDRB    R1, [R0]
         ORR     R1, #23          ; set bit 0
         STRB    R1, [R0]        ; store back to Dir Reg
+		
+		LDR     R0, =P1DIR      ; load Dir Reg in R1
+        LDRB    R1, [R0]
+        ORR     R1, #1          ; set bit 0
+        STRB    R1, [R0]        ; store back to Dir Reg
 
 loop
         BL 		allOFF
@@ -51,6 +56,9 @@ stateB
 	LDR		R0, =500000
     BL      delayMs
 	BL yellowOFF
+	LDR		R0, =500000
+    BL      delayMs
+	BL redON
 	BX      LR
 
 ; SUBROUTINES
@@ -69,7 +77,6 @@ greenOFF
         STRB    R1, [R0]        ; store back to Output Data Reg
 		BX      LR
 
-; CHECK THESE WHEN TRANSFER TO YOUR ON BOARD ***************************************************8888
 yellowON
 		LDR     R0, =P2OUT      ; load Output Data Reg in R1
         LDRB    R1, [R0]
@@ -90,6 +97,14 @@ redON
         LDRB    R1, [R0]
         ORR     R1, #1          ; set bit 0
         STRB    R1, [R0]        ; store back to Output Data Reg
+
+redOFF
+		LDR     R0, =P2OUT      ; load Output Data Reg in R1
+        LDRB    R1, [R0]
+        MVN     R2, #0          ; load complement of bit 0 mask
+        AND     R1, R2          ; clear bit 0
+        STRB    R1, [R0]        ; store back to Output Data Reg
+		BX      LR
 		
 allOFF
 		LDR     R0, =P2OUT      ; load Output Data Reg in R1
