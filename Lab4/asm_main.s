@@ -2,6 +2,7 @@
 P1DIR EQU 0x40004C04
 ; Port 1 Pin Output Register
 P1OUT EQU 0x40004C02
+P1IN EQU 0x40004C00
 	
 P2DIR EQU 0x40004C05
 P2OUT EQU 0x40004C03
@@ -24,7 +25,7 @@ asm_main
 		
 		LDR     R0, =P1DIR      ; load Dir Reg in R1
         LDRB    R1, [R0]
-        ORR     R1, #1          ; set bit 0
+        ORR     R1, #23          ; set bit 0
         STRB    R1, [R0]        ; store back to Dir Reg
 
 loop
@@ -39,39 +40,44 @@ loop
 
 ; This subroutine performs a delay of n ms (for 3 MHz CPU clock). 
 ; n is the value in R0.
+stateB
+	BL greenON
+	BL yellowOFF
+	BL redOFF
+	
+	; to get to stateC
+;	LDR r0, =P2IN
+;	LDRB r1, [r0]
+;	TST r1, FLAmask
+;	BEQ stateC
+
+	; to get to stateA
+	LDR r0, =P1IN
+	LDRB r1, [r0]
+	TST r1, TSTmask
+	BEQ stateA
+	
+	B stateB
+
+
+stateA
+	BL greenOFF
+	B stateA
+
+; SUBROUTINES
 delayMs
        
 L1      SUBS    R0, #1          ; inner loop
         BNE     L1
         BX      LR
 
-stateB
-	BL 	greenON
-	LDR		R0, =500000
-    BL      delayMs
-	BL greenOFF
-	LDR		R0, =500000
-    BL      delayMs
-	BL yellowON
-	LDR		R0, =500000
-    BL      delayMs
-	BL yellowOFF
-	LDR		R0, =500000
-    BL      delayMs
-	BL redON
-	LDR		R0, =500000
-    BL      delayMs
-	BL redOFF
-	BX      LR
-
-; SUBROUTINES
 greenON
 		LDR     R0, =P2OUT      ; load Output Data Reg in R1
         LDRB    R1, [R0]
         ORR     R1, #2          ; set bit 0
         STRB    R1, [R0]        ; store back to Output Data Reg
 		BX      LR
-
+		
 greenOFF
 		LDR     R0, =P2OUT      ; load Output Data Reg in R1
         LDRB    R1, [R0]
@@ -100,6 +106,7 @@ redON
         LDRB    R1, [R0]
         ORR     R1, #1          ; set bit 0
         STRB    R1, [R0]        ; store back to Output Data Reg
+		BX LR
 
 redOFF
 		LDR     R0, =P1OUT      ; load Output Data Reg in R1
