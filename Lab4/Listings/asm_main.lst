@@ -45,7 +45,7 @@ ARM Macro Assembler    Page 1
    24 00000000                 EXPORT           asm_main
    25 00000000         
    26 00000000         asm_main
-   27 00000000 483A            LDR              R0, =P2DIR
+   27 00000000 483F            LDR              R0, =P2DIR
    28 00000002 7801            LDRB             R1, [R0]
    29 00000004 F041 01FF       ORR              R1, #255
    30 00000008 7001            STRB             R1, [R0]
@@ -58,7 +58,7 @@ ARM Macro Assembler    Page 1
    37 0000000A         
    38 0000000A         
    39 0000000A         
-   40 0000000A 4839            LDR              R0, =P1DIR
+   40 0000000A 483E            LDR              R0, =P1DIR
    41 0000000C 7801            LDRB             R1, [R0]
    42 0000000E F041 01FF       ORR              R1, #255
    43 00000012 7001            STRB             R1, [R0]
@@ -70,14 +70,14 @@ ARM Macro Assembler    Page 2
 
 
    45 00000014         ; TIM CODE
-   46 00000014 4837            LDR              R0, =P2REN  ; load Dir Reg in R
+   46 00000014 483C            LDR              R0, =P2REN  ; load Dir Reg in R
                                                             1
    47 00000016 7801            LDRB             R1, [R0]    ;
    48 00000018 F041 0140       ORR              R1, FLAmask ; set bit
    49 0000001C 7001            STRB             R1, [R0]    ; store back to Dir
                                                              Reg
    50 0000001E         
-   51 0000001E 4836            LDR              R0, =P2OUT  ; load Dir Reg in R
+   51 0000001E 483B            LDR              R0, =P2OUT  ; load Dir Reg in R
                                                             1
    52 00000020 7801            LDRB             R1, [R0]    ;
    53 00000022 F041 0140       ORR              R1, FLAmask ; set bit
@@ -108,7 +108,7 @@ ARM Macro Assembler    Page 2
    77 00000028         
    78 00000028         
    79 00000028         loop
-   80 00000028 F000 F857       BL               allOFF
+   80 00000028 F000 F861       BL               allOFF
    81 0000002C         
    82 0000002C         ; start in state b
    83 0000002C F000 F812       BL               stateB
@@ -121,12 +121,12 @@ ARM Macro Assembler    Page 2
                        ------------------------
    90 00000032         ; STATES
    91 00000032         stateA
-   92 00000032 F000 F828       BL               greenON
-   93 00000036 F000 F834       BL               yellowON
-   94 0000003A F000 F840       BL               redON
+   92 00000032 F000 F832       BL               greenON
+   93 00000036 F000 F83E       BL               yellowON
+   94 0000003A F000 F84A       BL               redON
    95 0000003E         
-   96 0000003E 482F            LDR              R0, =500000
-   97 00000040 F000 F81E       BL               delayMs
+   96 0000003E 4834            LDR              R0, =500000
+   97 00000040 F000 F828       BL               delayMs
    98 00000044         
 
 
@@ -134,28 +134,28 @@ ARM Macro Assembler    Page 2
 ARM Macro Assembler    Page 3 
 
 
-   99 00000044 F000 F833       BL               yellowOFF
-  100 00000048 F000 F83F       BL               redOFF
+   99 00000044 F000 F83D       BL               yellowOFF
+  100 00000048 F000 F849       BL               redOFF
   101 0000004C         
-  102 0000004C 482B            LDR              R0, =500000
-  103 0000004E F000 F817       BL               delayMs
+  102 0000004C 4830            LDR              R0, =500000
+  103 0000004E F000 F821       BL               delayMs
   104 00000052         
   105 00000052 E7EE            B                stateA
   106 00000054         
   107 00000054         
   108 00000054         stateB
-  109 00000054 F000 F817       BL               greenON
-  110 00000058 F000 F829       BL               yellowOFF
-  111 0000005C F000 F835       BL               redOFF
+  109 00000054 F000 F821       BL               greenON
+  110 00000058 F000 F833       BL               yellowOFF
+  111 0000005C F000 F83F       BL               redOFF
   112 00000060         
   113 00000060         ; to get to stateC
-  114 00000060 4827            LDR              r0, =P2IN
+  114 00000060 482C            LDR              r0, =P2IN
   115 00000062 7801            LDRB             r1, [r0]
   116 00000064 F011 0F40       TST              r1, FLAmask
   117 00000068 D005            BEQ              stateC
   118 0000006A         
   119 0000006A         ; to get to stateA
-  120 0000006A 4826            LDR              r0, =P1IN
+  120 0000006A 482B            LDR              r0, =P1IN
   121 0000006C 7801            LDRB             r1, [r0]
   122 0000006E F011 0F02       TST              r1, TSTmask
   123 00000072 D0DE            BEQ              stateA
@@ -163,107 +163,119 @@ ARM Macro Assembler    Page 3
   125 00000074 E7EE            B                stateB
   126 00000076         
   127 00000076         stateC
-  128 00000076 F000 F814       BL               yellowON    ; THIS ISNT RIGHT F
-                                                            OR STATE C
-  129 0000007A F000 F80A       BL               greenOFF
-  130 0000007E E7FA            B                stateC
-  131 00000080         
-  132 00000080         ; ------------------------------------------------------
+  128 00000076 F000 F816       BL               greenOFF
+  129 0000007A F000 F830       BL               redOFF      ; red shouldnt be o
+                                                            n in stateB, but tu
+                                                            rn it off as a fail
+                                                            safe
+  130 0000007E F000 F81A       BL               yellowON
+  131 00000082         
+  132 00000082 4823            LDR              R0, =500000
+  133 00000084 F000 F806       BL               delayMs
+  134 00000088         
+  135 00000088 F000 F81B       BL               yellowOFF
+  136 0000008C         
+  137 0000008C 4820            LDR              R0, =500000
+  138 0000008E F000 F801       BL               delayMs
+  139 00000092         
+  140 00000092 E7F0            B                stateC
+  141 00000094         
+  142 00000094         ; ------------------------------------------------------
                        ------------------------
-  133 00000080         ; SUBROUTINES
-  134 00000080         delayMs
-  135 00000080         
-  136 00000080 3801    L1      SUBS             R0, #1      ; inner loop
-  137 00000082 D1FD            BNE              L1
-  138 00000084 4770            BX               LR
-  139 00000086         
-  140 00000086         greenON
-  141 00000086 481C            LDR              R0, =P2OUT  ; load Output Data 
+  143 00000094         ; SUBROUTINES
+  144 00000094         delayMs
+  145 00000094         
+  146 00000094 3801    L1      SUBS             R0, #1      ; inner loop
+  147 00000096 D1FD            BNE              L1
+  148 00000098 4770            BX               LR
+  149 0000009A         
+  150 0000009A         greenON
+  151 0000009A 481C            LDR              R0, =P2OUT  ; load Output Data 
                                                             Reg in R1
-  142 00000088 7801            LDRB             R1, [R0]
-  143 0000008A F041 0102       ORR              R1, #2      ; set bit 0
-  144 0000008E 7001            STRB             R1, [R0]    ; store back to Out
-                                                            put Data Reg
-  145 00000090 4770            BX               LR
-  146 00000092         
-  147 00000092         greenOFF
-  148 00000092 4819            LDR              R0, =P2OUT  ; load Output Data 
-                                                            Reg in R1
-  149 00000094 7801            LDRB             R1, [R0]
-  150 00000096 F06F 0202       MVN              R2, #2      ; load complement o
-                                                            f bit 0 mask
-  151 0000009A EA01 0102       AND              R1, R2      ; clear bit 0
+  152 0000009C 7801            LDRB             R1, [R0]
 
 
 
 ARM Macro Assembler    Page 4 
 
 
-  152 0000009E 7001            STRB             R1, [R0]    ; store back to Out
+  153 0000009E F041 0102       ORR              R1, #2      ; set bit 0
+  154 000000A2 7001            STRB             R1, [R0]    ; store back to Out
                                                             put Data Reg
-  153 000000A0 4770            BX               LR
-  154 000000A2         
-  155 000000A2         yellowON
-  156 000000A2 4815            LDR              R0, =P2OUT  ; load Output Data 
+  155 000000A4 4770            BX               LR
+  156 000000A6         
+  157 000000A6         greenOFF
+  158 000000A6 4819            LDR              R0, =P2OUT  ; load Output Data 
                                                             Reg in R1
-  157 000000A4 7801            LDRB             R1, [R0]
-  158 000000A6 F041 0110       ORR              R1, YELLOWmask
-  159 000000AA 7001            STRB             R1, [R0]    ; store back to Out
+  159 000000A8 7801            LDRB             R1, [R0]
+  160 000000AA F06F 0202       MVN              R2, #2      ; load complement o
+                                                            f bit 0 mask
+  161 000000AE EA01 0102       AND              R1, R2      ; clear bit 0
+  162 000000B2 7001            STRB             R1, [R0]    ; store back to Out
                                                             put Data Reg
-  160 000000AC 4770            BX               LR
-  161 000000AE         
-  162 000000AE         yellowOFF
-  163 000000AE 4812            LDR              R0, =P2OUT  ; load Output Data 
+  163 000000B4 4770            BX               LR
+  164 000000B6         
+  165 000000B6         yellowON
+  166 000000B6 4815            LDR              R0, =P2OUT  ; load Output Data 
                                                             Reg in R1
-  164 000000B0 7801            LDRB             R1, [R0]
-  165 000000B2 F06F 0210       MVN              R2, YELLOWmask ; load complemen
+  167 000000B8 7801            LDRB             R1, [R0]
+  168 000000BA F041 0110       ORR              R1, YELLOWmask
+  169 000000BE 7001            STRB             R1, [R0]    ; store back to Out
+                                                            put Data Reg
+  170 000000C0 4770            BX               LR
+  171 000000C2         
+  172 000000C2         yellowOFF
+  173 000000C2 4812            LDR              R0, =P2OUT  ; load Output Data 
+                                                            Reg in R1
+  174 000000C4 7801            LDRB             R1, [R0]
+  175 000000C6 F06F 0210       MVN              R2, YELLOWmask ; load complemen
                                                             t of bit 0 mask
-  166 000000B6 EA01 0102       AND              R1, R2      ; clear bit 0
-  167 000000BA 7001            STRB             R1, [R0]    ; store back to Out
+  176 000000CA EA01 0102       AND              R1, R2      ; clear bit 0
+  177 000000CE 7001            STRB             R1, [R0]    ; store back to Out
                                                             put Data Reg
-  168 000000BC 4770            BX               LR
-  169 000000BE         
-  170 000000BE         redON
-  171 000000BE 4812            LDR              R0, =P1OUT  ; load Output Data 
+  178 000000D0 4770            BX               LR
+  179 000000D2         
+  180 000000D2         redON
+  181 000000D2 4812            LDR              R0, =P1OUT  ; load Output Data 
                                                             Reg in R1
-  172 000000C0 7801            LDRB             R1, [R0]
-  173 000000C2 F041 0101       ORR              R1, #1      ; set bit 0
-  174 000000C6 7001            STRB             R1, [R0]    ; store back to Out
+  182 000000D4 7801            LDRB             R1, [R0]
+  183 000000D6 F041 0101       ORR              R1, #1      ; set bit 0
+  184 000000DA 7001            STRB             R1, [R0]    ; store back to Out
                                                             put Data Reg
-  175 000000C8 4770            BX               LR
-  176 000000CA         
-  177 000000CA         redOFF
-  178 000000CA 480F            LDR              R0, =P1OUT  ; load Output Data 
+  185 000000DC 4770            BX               LR
+  186 000000DE         
+  187 000000DE         redOFF
+  188 000000DE 480F            LDR              R0, =P1OUT  ; load Output Data 
                                                             Reg in R1
-  179 000000CC 7801            LDRB             R1, [R0]
-  180 000000CE F06F 0201       MVN              R2, #1      ; load complement o
+  189 000000E0 7801            LDRB             R1, [R0]
+  190 000000E2 F06F 0201       MVN              R2, #1      ; load complement o
                                                             f bit 0 mask
-  181 000000D2 EA01 0102       AND              R1, R2      ; clear bit 0
-  182 000000D6 7001            STRB             R1, [R0]    ; store back to Out
+  191 000000E6 EA01 0102       AND              R1, R2      ; clear bit 0
+  192 000000EA 7001            STRB             R1, [R0]    ; store back to Out
                                                             put Data Reg
-  183 000000D8 4770            BX               LR
-  184 000000DA         
-  185 000000DA         allOFF
-  186 000000DA 4807            LDR              R0, =P2OUT  ; load Output Data 
+  193 000000EC 4770            BX               LR
+  194 000000EE         
+  195 000000EE         allOFF
+  196 000000EE 4807            LDR              R0, =P2OUT  ; load Output Data 
                                                             Reg in R1
-  187 000000DC 7801            LDRB             R1, [R0]
-  188 000000DE F06F 0207       MVN              R2, #7      ; load complement o
-                                                            f bit 0 mask
-  189 000000E2 EA01 0102       AND              R1, R2      ; clear bit 0
-  190 000000E6 7001            STRB             R1, [R0]    ; store back to Out
-                                                            put Data Reg
-  191 000000E8 4770            BX               LR
-  192 000000EA         
-  193 000000EA                 END
-              00 00 40004C05 
-              40004C04 
-              40004C07 
 
 
 
 ARM Macro Assembler    Page 5 
 
 
+  197 000000F0 7801            LDRB             R1, [R0]
+  198 000000F2 F06F 0207       MVN              R2, #7      ; load complement o
+                                                            f bit 0 mask
+  199 000000F6 EA01 0102       AND              R1, R2      ; clear bit 0
+  200 000000FA 7001            STRB             R1, [R0]    ; store back to Out
+                                                            put Data Reg
+  201 000000FC 4770            BX               LR
+  202 000000FE         
+  203 000000FE                 END
+              00 00 40004C05 
+              40004C04 
+              40004C07 
               40004C03 
               0007A120 
               40004C01 
@@ -290,19 +302,19 @@ Symbol: .text
    Uses
       None
 Comment: .text unused
-L1 00000080
+L1 00000094
 
 Symbol: L1
    Definitions
-      At line 136 in file asm_main.s
+      At line 146 in file asm_main.s
    Uses
-      At line 137 in file asm_main.s
+      At line 147 in file asm_main.s
 Comment: L1 used once
-allOFF 000000DA
+allOFF 000000EE
 
 Symbol: allOFF
    Definitions
-      At line 185 in file asm_main.s
+      At line 195 in file asm_main.s
    Uses
       At line 80 in file asm_main.s
 Comment: allOFF used once
@@ -314,33 +326,33 @@ Symbol: asm_main
    Uses
       At line 24 in file asm_main.s
 Comment: asm_main used once
-delayMs 00000080
+delayMs 00000094
 
 Symbol: delayMs
    Definitions
-      At line 134 in file asm_main.s
+      At line 144 in file asm_main.s
    Uses
       At line 97 in file asm_main.s
       At line 103 in file asm_main.s
+      At line 133 in file asm_main.s
+      At line 138 in file asm_main.s
 
-greenOFF 00000092
+greenOFF 000000A6
 
 Symbol: greenOFF
    Definitions
-      At line 147 in file asm_main.s
+      At line 157 in file asm_main.s
    Uses
-      At line 129 in file asm_main.s
+      At line 128 in file asm_main.s
 Comment: greenOFF used once
-greenON 00000086
+greenON 0000009A
 
 Symbol: greenON
    Definitions
-      At line 140 in file asm_main.s
+      At line 150 in file asm_main.s
    Uses
       At line 92 in file asm_main.s
       At line 109 in file asm_main.s
-
-loop 00000028
 
 
 
@@ -348,26 +360,29 @@ ARM Macro Assembler    Page 2 Alphabetic symbol ordering
 Relocatable symbols
 
 
+loop 00000028
+
 Symbol: loop
    Definitions
       At line 79 in file asm_main.s
    Uses
       At line 87 in file asm_main.s
 Comment: loop used once
-redOFF 000000CA
+redOFF 000000DE
 
 Symbol: redOFF
    Definitions
-      At line 177 in file asm_main.s
+      At line 187 in file asm_main.s
    Uses
       At line 100 in file asm_main.s
       At line 111 in file asm_main.s
+      At line 129 in file asm_main.s
 
-redON 000000BE
+redON 000000D2
 
 Symbol: redON
    Definitions
-      At line 170 in file asm_main.s
+      At line 180 in file asm_main.s
    Uses
       At line 94 in file asm_main.s
 Comment: redON used once
@@ -396,31 +411,32 @@ Symbol: stateC
       At line 127 in file asm_main.s
    Uses
       At line 117 in file asm_main.s
-      At line 130 in file asm_main.s
+      At line 140 in file asm_main.s
 
-yellowOFF 000000AE
+yellowOFF 000000C2
 
 Symbol: yellowOFF
    Definitions
-      At line 162 in file asm_main.s
-   Uses
-      At line 99 in file asm_main.s
-      At line 110 in file asm_main.s
+      At line 172 in file asm_main.s
 
 
 
 ARM Macro Assembler    Page 3 Alphabetic symbol ordering
 Relocatable symbols
 
+   Uses
+      At line 99 in file asm_main.s
+      At line 110 in file asm_main.s
+      At line 135 in file asm_main.s
 
-yellowON 000000A2
+yellowON 000000B6
 
 Symbol: yellowON
    Definitions
-      At line 155 in file asm_main.s
+      At line 165 in file asm_main.s
    Uses
       At line 93 in file asm_main.s
-      At line 128 in file asm_main.s
+      At line 130 in file asm_main.s
 
 15 symbols
 
@@ -477,8 +493,8 @@ Symbol: P1OUT
    Definitions
       At line 4 in file asm_main.s
    Uses
-      At line 171 in file asm_main.s
-      At line 178 in file asm_main.s
+      At line 181 in file asm_main.s
+      At line 188 in file asm_main.s
 
 P1REN 40004C06
 
@@ -517,11 +533,11 @@ Symbol: P2OUT
       At line 10 in file asm_main.s
    Uses
       At line 51 in file asm_main.s
-      At line 141 in file asm_main.s
-      At line 148 in file asm_main.s
-      At line 156 in file asm_main.s
-      At line 163 in file asm_main.s
-      At line 186 in file asm_main.s
+      At line 151 in file asm_main.s
+      At line 158 in file asm_main.s
+      At line 166 in file asm_main.s
+      At line 173 in file asm_main.s
+      At line 196 in file asm_main.s
 
 P2REN 40004C07
 
@@ -545,8 +561,8 @@ Symbol: YELLOWmask
    Definitions
       At line 13 in file asm_main.s
    Uses
-      At line 158 in file asm_main.s
-      At line 165 in file asm_main.s
+      At line 168 in file asm_main.s
+      At line 175 in file asm_main.s
 
 13 symbols
 365 symbols in table

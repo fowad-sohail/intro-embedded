@@ -125,8 +125,18 @@ stateB
 	B stateB
 
 stateC
-	BL yellowON ; THIS ISNT RIGHT FOR STATE C
 	BL greenOFF
+	BL redOFF ; red shouldnt be on in stateB, but turn it off as a failsafe
+	BL yellowON
+	
+	LDR     R0, =500000
+    BL      delayMs
+	
+	BL yellowOFF
+	
+	LDR     R0, =500000
+    BL      delayMs
+	
 	B stateC
 
 ; ------------------------------------------------------------------------------
