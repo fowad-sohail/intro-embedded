@@ -96,6 +96,12 @@ stateB
 	B stateB
 
 stateC
+	; to get to stateE
+	LDR r0, =P2IN
+	LDRB r1, [r0]
+	TST r1, OLAmask
+	BEQ stateE
+	
 	BL greenOFF
 	BL redOFF ; red shouldnt be on in stateB, but turn it off as a failsafe
 	BL yellowON
@@ -109,6 +115,21 @@ stateC
     BL      delayMs
 	
 	B stateC
+	
+stateE
+	BL greenOFF
+	BL yellowOFF
+	BL redON
+	
+	LDR     R0, =500000
+    BL      delayMs
+	
+	BL redOFF
+	
+	LDR     R0, =500000
+    BL      delayMs
+	
+	B stateE
 
 ; ------------------------------------------------------------------------------
 ; SUBROUTINES
