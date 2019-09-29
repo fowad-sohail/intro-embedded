@@ -117,6 +117,12 @@ stateC
 	B stateC
 
 stateD
+	; to get to stateE
+	LDR r0, =P2IN
+	LDRB r1, [r0]
+	TST r1, OLAmask
+	BEQ stateE
+	
 	BL greenOFF
 	BL redOFF
 	BL yellowON
