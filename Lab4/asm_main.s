@@ -140,6 +140,13 @@ stateD
 	TST r1, OLAmask
 	BEQ stateE
 	
+	; didnt branch to stateE, OLA is off
+	; check FLA for branch
+	LDR r0, =P2IN
+	LDRB r1, [r0]
+	TST r1, FLAmask
+	BNE stateC
+	
 	BL greenOFF
 	BL redOFF
 	BL yellowON
