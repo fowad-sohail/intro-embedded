@@ -52,8 +52,8 @@ loop
         
         B       loop	; repeat the loop
 
-;-------------------------------------------------------------------------------
 ; STATES
+;-------------------------------------------------------------------------------
 stateA
 	; to get to stateB
 	LDR r0, =P1IN
@@ -75,7 +75,7 @@ stateA
     BL      delayMs
 	
 	B stateA
-
+;-------------------------------------------------------------------------------
 stateB
 	BL greenON
 	BL yellowOFF
@@ -94,7 +94,7 @@ stateB
 	BEQ stateA
 	
 	B stateB
-
+;-------------------------------------------------------------------------------
 stateC
 	; to get to stateE
 	LDR r0, =P2IN
@@ -102,8 +102,21 @@ stateC
 	TST r1, OLAmask
 	BEQ stateE
 	
+	; to get to stateD
+	LDR r0, =P1IN
+	LDRB r1, [r0]
+	TST r1, ACKmask
+	BEQ stateD
+	
+	; to get to stateB
+;	LDR r0, =P2IN
+;	LDRB r1, [r0]
+;	TST r1, OLAmask
+;	BNE stateB
+	
+	; flash yellow
 	BL greenOFF
-	BL redOFF ; red shouldnt be on in stateB, but turn it off as a failsafe
+	BL redOFF
 	BL yellowON
 	
 	LDR     R0, =500000
@@ -115,7 +128,7 @@ stateC
     BL      delayMs
 	
 	B stateC
-
+;-------------------------------------------------------------------------------
 stateD
 	; to get to stateE
 	LDR r0, =P2IN
@@ -128,7 +141,7 @@ stateD
 	BL yellowON
 	
 	B stateD
-	
+;-------------------------------------------------------------------------------
 stateE
 	; to get to stateF
 	LDR r0, =P1IN
@@ -149,7 +162,7 @@ stateE
     BL      delayMs
 	
 	B stateE
-	
+;-------------------------------------------------------------------------------
 stateF
 	; to get to stateD
 	LDR r0, =P2IN
@@ -162,9 +175,9 @@ stateF
 	BL redON
 	
 	B stateF
-
 ; ------------------------------------------------------------------------------
 ; SUBROUTINES
+; ------------------------------------------------------------------------------
 delayMs
        
 L1      SUBS    R0, #1          ; inner loop
