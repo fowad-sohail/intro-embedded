@@ -28,21 +28,12 @@ asm_main
         LDRB    R1, [R0]
         ORR     R1, #255          
         STRB    R1, [R0]        
-		
-		; make pin 2.6 pull up configured
-;		LDR     R0, =P2REN
-;        LDRB    R1, [R0]
-;        ORR     R1, #64          
-;        STRB    R1, [R0] 
-		
-		
-		
+				
 		LDR     R0, =P1DIR      
         LDRB    R1, [R0]
         ORR     R1, #255          
         STRB    R1, [R0]
 		
-		; TIM CODE
 		LDR     R0, =P2REN      ; load Dir Reg in R1
 		LDRB    R1, [R0]        ;
 		ORR     R1, FLAmask     ; set bit
@@ -52,29 +43,6 @@ asm_main
 		LDRB    R1, [R0]        ;
 		ORR     R1, FLAmask		; set bit
 		STRB    R1, [R0]        ; store back to Dir Reg
-		
-		
-		
-		; RYAN BROKEN CODE
-;		; make P1.[1, 4, 6, 7] inputs pins
-;		LDR     R0, =P1DIR      
-;        LDRB    R1, [R0]
-;        MVN		R2, #0xD2
-;		AND		R1, R2
-;        STRB    R1, [R0]
-;		
-;		; enable pull configuration P1.1, P1.4
-;		LDR R0, =P1REN
-;		LDRB R1, [R0]
-;		ORR R1, #0x12
-;		STRB R1, [R0]
-;		
-;		; P1.1 pull up resistor
-;		LDR R0, =P1OUT
-;		LDRB R1, [R0]
-;		ORR R1, #0x12
-;		STRB R1, [R0]
-		
 
 loop
         BL 		allOFF
@@ -82,13 +50,17 @@ loop
         ; start in state b
 		BL		stateB
         
-
-
         B       loop	; repeat the loop
 
 ;-------------------------------------------------------------------------------
 ; STATES
 stateA
+	; to get to stateB
+	LDR r0, =P1IN
+	LDRB r1, [r0]
+	TST r1, TSTmask
+	BNE stateB
+	
 	BL greenON
 	BL yellowON
 	BL redON
@@ -103,7 +75,6 @@ stateA
     BL      delayMs
 	
 	B stateA
-
 
 stateB
 	BL greenON
