@@ -117,6 +117,12 @@ stateC
 	B stateC
 	
 stateE
+	; to get to stateF
+	LDR r0, =P1IN
+	LDRB r1, [r0]
+	TST r1, ACKmask
+	BEQ stateF
+
 	BL greenOFF
 	BL yellowOFF
 	BL redON
@@ -130,6 +136,13 @@ stateE
     BL      delayMs
 	
 	B stateE
+	
+stateF
+	BL greenOFF
+	BL yellowOFF
+	BL redON
+	
+	B stateF
 
 ; ------------------------------------------------------------------------------
 ; SUBROUTINES
