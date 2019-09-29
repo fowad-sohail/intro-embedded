@@ -115,6 +115,13 @@ stateC
     BL      delayMs
 	
 	B stateC
+
+stateD
+	BL greenOFF
+	BL redOFF
+	BL yellowON
+	
+	B stateD
 	
 stateE
 	; to get to stateF
@@ -138,6 +145,12 @@ stateE
 	B stateE
 	
 stateF
+	; to get to stateD
+	LDR r0, =P2IN
+	LDRB r1, [r0]
+	TST r1, OLAmask
+	BNE stateD
+	
 	BL greenOFF
 	BL yellowOFF
 	BL redON
