@@ -95,25 +95,7 @@ stateB
 	
 	B stateB
 ;-------------------------------------------------------------------------------
-stateC
-	; to get to stateE
-	LDR r0, =P2IN
-	LDRB r1, [r0]
-	TST r1, OLAmask
-	BEQ stateE
-	
-	; to get to stateD
-	LDR r0, =P1IN
-	LDRB r1, [r0]
-	TST r1, ACKmask
-	BEQ stateD
-	
-	; to get to stateB
-;	LDR r0, =P2IN
-;	LDRB r1, [r0]
-;	TST r1, OLAmask
-;	BNE stateB
-	
+stateC	
 	; flash yellow
 	BL greenOFF
 	BL redOFF
@@ -126,6 +108,28 @@ stateC
 	
 	LDR     R0, =500000
     BL      delayMs
+	
+	; to get to stateE
+	LDR r0, =P2IN
+	LDRB r1, [r0]
+	TST r1, OLAmask
+	BEQ stateE
+	
+	; didnt branch to stateE, OLA is off
+	; check FLA for branch
+	LDR r0, =P2IN
+	LDRB r1, [r0]
+	TST r1, FLAmask
+	BNE stateB
+	
+	; didnt branch to stateB, FLA is off
+	; check ACK for branch
+	LDR r0, =P1IN
+	LDRB r1, [r0]
+	TST r1, ACKmask
+	BEQ stateD
+	
+	; to get to stateB
 	
 	B stateC
 ;-------------------------------------------------------------------------------
@@ -176,6 +180,7 @@ stateF
 	
 	B stateF
 ; ------------------------------------------------------------------------------
+
 ; SUBROUTINES
 ; ------------------------------------------------------------------------------
 delayMs
