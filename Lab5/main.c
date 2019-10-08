@@ -36,7 +36,6 @@ int main(void)
         }
         else
         {
-//            P1OUT &= ~(BIT0);
         }
     }
 }
