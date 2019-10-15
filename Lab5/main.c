@@ -2,10 +2,15 @@
 #include <msp430.h>
 
 
-/**
- * main.c
- * MSP430f5529
- */
+// Author: Fowad Sohail
+// Class: Introduction to Embedded Systems
+// Section: 3
+// Date: 8 October 2019
+// Microcontroller: MSP430F5529
+
+// Program Description: This program is designed to turn on LED1 (P1.0) when S2 (P1.1) is pressed. This is done by using an
+//                      infinitely looping while loop to constantly check if S2 is pressed. If it is pressed, LED1 will light up.
+//                      If it is not pressed, LED1 will be turned off.
 int main(void)
 {
     int j;
