@@ -1,9 +1,9 @@
 #include <msp430.h> 
 
-// Author: Brian Harlow
+// Author: Fowad Sohail
 // Class: Introduction to Embedded Systems
 // Section: 3
-// Date: 26 September 2018
+// Date: 15 October 2019
 // Microcontroller: MSP430F5529
 
 // Program Description: This program is designed to use a button and an LED on a development board with the MSP430F5529 microcontroller
